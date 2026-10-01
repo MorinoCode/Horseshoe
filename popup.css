@@ -139,6 +139,9 @@ body.rtl .paywall-perks {
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 360px;
+  max-width: 360px;
+  margin: 0 auto;
   padding: 8px 14px 10px;
   justify-content: space-between;
 }
