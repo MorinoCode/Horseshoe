@@ -794,6 +794,7 @@ class LuckyHorseshoeApp {
     this.titleNumber = document.getElementById('titleNumber');
     this.tokenNumber = document.getElementById('tokenNumber');
     this.titleHour = document.getElementById('titleHour');
+    this.titleHourText = document.getElementById('titleHourText');
     this.tokenHour = document.getElementById('tokenHour');
     this.goldenHourBell = document.getElementById('goldenHourBell');
     this.titleColor = document.getElementById('titleColor');
@@ -975,6 +976,14 @@ class LuckyHorseshoeApp {
 
     // Share button
     this.shareBtn.addEventListener('click', () => this.shareFortune());
+
+    // Golden Hour Reminder Bell
+    if (this.goldenHourBell) {
+      this.goldenHourBell.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.toggleGoldenHourAlarm();
+      });
+    }
   }
 
   openSettings() {
@@ -1177,13 +1186,13 @@ class LuckyHorseshoeApp {
     this.vipStatusDesc.textContent = t.vipStatusDesc;
     this.settingsProBtn.textContent = t.vipStatusBtn;
 
-    // Golden Hour Title preserving the bell button
-    this.titleHour.innerHTML = `${t.titleHour} <button class="hour-bell-btn ${this.goldenHourAlarmEnabled ? 'active' : ''}" id="goldenHourBell" title="Set Golden Hour Reminder Notification">🔔</button>`;
-    this.goldenHourBell = document.getElementById('goldenHourBell');
-    this.goldenHourBell.addEventListener('click', (e) => {
-      e.stopPropagation();
-      this.toggleGoldenHourAlarm();
-    });
+    // Golden Hour Title text
+    if (this.titleHourText) {
+      this.titleHourText.textContent = t.titleHour;
+    }
+    if (this.goldenHourBell) {
+      this.goldenHourBell.classList.toggle('active', this.goldenHourAlarmEnabled);
+    }
 
     // Paywall modal texts
     this.paywallTitle.textContent = t.paywallTitle;
