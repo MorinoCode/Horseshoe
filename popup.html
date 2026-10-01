@@ -27,9 +27,6 @@
       </div>
 
       <div class="header-actions">
-        <!-- Language Switcher -->
-        <button class="icon-btn lang-btn" id="langToggle" title="تغییر زبان به فارسی / Switch Language">FA</button>
-
         <!-- 7-Day Trial Indicator -->
         <div class="trial-pill" id="trialPill" title="Free Trial Status">
           <span class="trial-icon">⏳</span>
@@ -61,18 +58,19 @@
             <line x1="17" y1="9" x2="23" y2="15"></line>
           </svg>
         </button>
+
+        <!-- Settings Button (Language & Theme Selection) -->
+        <button class="icon-btn" id="settingsBtn" aria-label="Settings" title="Settings / تنظیمات">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
       </div>
     </header>
 
     <!-- Hero Interactive Section -->
     <main class="main-stage">
-      <!-- Skin Selector (Pro Perks) -->
-      <div class="skins-bar" id="skinsBar">
-        <button class="skin-btn active" data-skin="gold" title="Imperial Gold (Classic)">🌟</button>
-        <button class="skin-btn" data-skin="emerald" title="Emerald Radiance (VIP)">🌿</button>
-        <button class="skin-btn" data-skin="diamond" title="Diamond Quantum (VIP)">💎</button>
-        <button class="skin-btn" data-skin="rosegold" title="Rose Gold Love (VIP)">🌸</button>
-      </div>
 
       <div class="horseshoe-pedestal" id="horseshoePedestal">
         <div class="pedestal-glow" id="pedestalGlow"></div>
@@ -283,6 +281,94 @@
         <span id="shareBtnLabel">Share</span>
       </button>
     </footer>
+
+    <!-- Settings Modal (Language & Theme Selection) -->
+    <div class="settings-modal hidden" id="settingsModal">
+      <div class="settings-backdrop" id="settingsBackdrop"></div>
+      <div class="settings-card">
+        <div class="settings-header">
+          <div class="settings-title-wrap">
+            <span class="settings-icon">⚙️</span>
+            <h3 class="settings-title" id="settingsTitle">SETTINGS</h3>
+          </div>
+          <button class="settings-close-btn" id="settingsCloseBtn" aria-label="Close Settings">✕</button>
+        </div>
+
+        <!-- Language Selector Section -->
+        <div class="settings-section">
+          <div class="settings-section-title" id="langSectionTitle">LANGUAGE / زبان</div>
+          <div class="lang-grid" id="langGrid">
+            <button class="lang-choice-btn active" data-lang="en">
+              <span class="flag-icon">🇬🇧</span>
+              <span class="lang-name">English</span>
+            </button>
+            <button class="lang-choice-btn" data-lang="fa">
+              <span class="flag-icon">🇮🇷</span>
+              <span class="lang-name">فارسی</span>
+            </button>
+            <button class="lang-choice-btn" data-lang="ar">
+              <span class="flag-icon">🇸🇦</span>
+              <span class="lang-name">العربية</span>
+            </button>
+            <button class="lang-choice-btn" data-lang="ru">
+              <span class="flag-icon">🇷🇺</span>
+              <span class="lang-name">Русский</span>
+            </button>
+            <button class="lang-choice-btn" data-lang="es">
+              <span class="flag-icon">🇪🇸</span>
+              <span class="lang-name">Español</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Talisman Theme / Skin Section -->
+        <div class="settings-section">
+          <div class="settings-section-title" id="themeSectionTitle">HORSESHOE THEME</div>
+          <div class="theme-grid" id="themeGrid">
+            <button class="theme-card active" data-skin="gold">
+              <div class="theme-preview skin-gold">🌟</div>
+              <div class="theme-info">
+                <span class="theme-name" id="themeGoldName">Imperial Gold</span>
+                <span class="theme-badge free">CLASSIC</span>
+              </div>
+            </button>
+            <button class="theme-card" data-skin="emerald">
+              <div class="theme-preview skin-emerald">🌿</div>
+              <div class="theme-info">
+                <span class="theme-name" id="themeEmeraldName">Emerald Radiance</span>
+                <span class="theme-badge vip">VIP 👑</span>
+              </div>
+            </button>
+            <button class="theme-card" data-skin="diamond">
+              <div class="theme-preview skin-diamond">💎</div>
+              <div class="theme-info">
+                <span class="theme-name" id="themeDiamondName">Diamond Quantum</span>
+                <span class="theme-badge vip">VIP 👑</span>
+              </div>
+            </button>
+            <button class="theme-card" data-skin="rosegold">
+              <div class="theme-preview skin-rosegold">🌸</div>
+              <div class="theme-info">
+                <span class="theme-name" id="themeRoseName">Rose Gold Love</span>
+                <span class="theme-badge vip">VIP 👑</span>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- VIP Status Card -->
+        <div class="settings-section settings-vip-section" id="settingsVipSection">
+          <div class="vip-status-row">
+            <span class="vip-status-icon">👑</span>
+            <div class="vip-status-texts">
+              <b class="vip-status-title" id="vipStatusTitle">Unlock All Themes & Oracles</b>
+              <span class="vip-status-desc" id="vipStatusDesc">Lifetime Pro gives access to all talisman skins</span>
+            </div>
+            <button class="vip-status-btn" id="settingsProBtn">UPGRADE</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Paywall Modal (Displayed when 7-day trial ends for free users) -->
     <div class="paywall-modal hidden" id="paywallModal">
