@@ -879,9 +879,26 @@ class LuckyHorseshoeApp {
       });
     }
 
-    // Pro buttons & Lock overlays
+    // Pro buttons & Lock overlays (supports Alt+Click or 3-Quick-Clicks to toggle Pro test mode)
+    let proClickCount = 0;
+    let proClickTimer = null;
     if (this.proBtn) {
-      this.proBtn.addEventListener('click', () => this.handleProClick());
+      this.proBtn.addEventListener('click', (e) => {
+        if (e.altKey || e.ctrlKey || e.shiftKey) {
+          e.preventDefault();
+          this.toggleProTest();
+          return;
+        }
+        proClickCount++;
+        clearTimeout(proClickTimer);
+        proClickTimer = setTimeout(() => { proClickCount = 0; }, 500);
+        if (proClickCount >= 3) {
+          proClickCount = 0;
+          this.toggleProTest();
+          return;
+        }
+        this.handleProClick();
+      });
     }
     if (this.proUnlockTag) {
       this.proUnlockTag.addEventListener('click', () => this.handleProClick());
@@ -1072,6 +1089,14 @@ class LuckyHorseshoeApp {
   }
 
   async checkProStatus() {
+    // Check developer test override
+    const data = await Storage.get(['proTestOverride']);
+    if (data.proTestOverride) {
+      this.isProUser = true;
+      this.isTrialExpired = false;
+      return;
+    }
+
     if (!this.extpay) return;
     try {
       const user = await this.extpay.getUser();
@@ -1082,6 +1107,23 @@ class LuckyHorseshoeApp {
     } catch {
       // ExtPay offline or network notice
     }
+  }
+
+  async toggleProTest() {
+    this.isProUser = !this.isProUser;
+    await Storage.set({ proTestOverride: this.isProUser });
+    this.sound.playCelestialChime(this.isProUser);
+    if (this.isProUser) {
+      this.isTrialExpired = false;
+      this.showToast("👑 Developer Test: PRO VIP Activated!");
+    } else {
+      this.showToast("🍀 Developer Test: Free Mode Activated!");
+      if (this.selectedSkin !== 'gold') {
+        this.applySkin('gold', false);
+      }
+    }
+    this.renderInitialUI();
+    return `PRO VIP is now ${this.isProUser ? 'ACTIVE 👑' : 'OFF (Free Mode) 🍀'}`;
   }
 
   applyLanguage() {

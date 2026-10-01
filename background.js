@@ -23,6 +23,13 @@ function getTodayDateString() {
 async function updateBadge(isActivatedToday) {
   if (isActivatedToday) {
     try {
+      const testData = await new Promise((r) => chrome.storage.local.get(['proTestOverride'], r));
+      if (testData && testData.proTestOverride) {
+        chrome.action.setBadgeText({ text: '👑' });
+        chrome.action.setBadgeBackgroundColor({ color: '#D97706' }); // Royal Gold
+        chrome.action.setTitle({ title: 'Lucky Horseshoe (VIP Pro Active 👑)' });
+        return;
+      }
       const user = await extpay.getUser();
       if (user && user.paid) {
         chrome.action.setBadgeText({ text: '👑' });
@@ -106,10 +113,11 @@ chrome.runtime.onStartup.addListener(() => {
 // Listen for storage changes from popup
 chrome.storage.onChanged.addListener((changes, areaName) => {
   if (areaName === 'local') {
-    if (changes.lastActivatedDate) {
+    if (changes.lastActivatedDate || changes.proTestOverride) {
       const today = getTodayDateString();
-      const isActivated = changes.lastActivatedDate.newValue === today;
-      updateBadge(isActivated);
+      chrome.storage.local.get(['lastActivatedDate'], (res) => {
+        updateBadge(res.lastActivatedDate === today);
+      });
     }
     if (changes.goldenHourAlarmEnabled || changes.goldenHourTime) {
       chrome.storage.local.get(['goldenHourAlarmEnabled', 'goldenHourTime'], (res) => {
