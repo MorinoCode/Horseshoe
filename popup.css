@@ -142,12 +142,14 @@ html, body {
 
 /* 7-Day Trial Pill */
 .trial-pill {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
   background: rgba(245, 158, 11, 0.12);
-  border: 1px solid rgba(245, 158, 11, 0.28);
-  padding: 2px 6px;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  padding: 2px 7px;
   border-radius: 20px;
   font-size: 9.5px;
   font-weight: 700;
@@ -163,13 +165,16 @@ html, body {
 
 .trial-icon {
   font-size: 9.5px;
+  line-height: 1;
 }
 
 /* Pro VIP Button */
 .pro-badge {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.3));
   border: 1px solid rgba(245, 158, 11, 0.5);
   padding: 2px 7px;
@@ -199,9 +204,11 @@ html, body {
 }
 
 .streak-badge {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
   background: rgba(16, 185, 129, 0.12);
   border: 1px solid rgba(16, 185, 129, 0.3);
   padding: 2px 7px;
