@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lucky Horseshoe</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Ambient background lighting -->
+  <div class="ambient-glow glow-top"></div>
+  <div class="ambient-glow glow-bottom"></div>
+
+  <!-- Particle Canvas for explosive golden confetti -->
+  <canvas id="particleCanvas"></canvas>
+
+  <div class="container">
+    <!-- Top Navigation Bar -->
+    <header class="header">
+      <div class="brand">
+        <div class="mini-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 3v8a6 6 0 0 0 12 0V3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="brand-title">LUCKY HORSESHOE</span>
+      </div>
+
+      <div class="header-actions">
+        <!-- 7-Day Trial Indicator -->
+        <div class="trial-pill" id="trialPill" title="Free Trial Status">
+          <span class="trial-icon">⏳</span>
+          <span id="trialDaysText">7d Trial</span>
+        </div>
+
+        <!-- Pro badge / upgrade button -->
+        <button class="pro-badge" id="proBtn" title="Unlock Lifetime VIP Luck">
+          <span class="pro-crown">👑</span>
+          <span id="proLabel">PRO</span>
+        </button>
+
+        <!-- Streak counter badge -->
+        <div class="streak-badge" id="streakBadge" title="Consecutive Lucky Days">
+          <span class="streak-fire">🍀</span>
+          <span id="streakCount">1</span>
+        </div>
+
+        <!-- Sound toggle -->
+        <button class="icon-btn" id="soundToggle" aria-label="Toggle Sound" title="Sound Effects">
+          <svg id="soundOnIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+          <svg id="soundOffIcon" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero Interactive Section -->
+    <main class="main-stage">
+      <div class="horseshoe-pedestal" id="horseshoePedestal">
+        <div class="pedestal-glow" id="pedestalGlow"></div>
+        <div class="horseshoe-halo"></div>
+        
+        <!-- Interactive 3D Horseshoe SVG -->
+        <div class="horseshoe-wrapper" id="horseshoeBtn" role="button" tabindex="0" aria-label="Activate Lucky Horseshoe">
+          <svg class="horseshoe-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <!-- Metallic Gold Gradient -->
+              <linearGradient id="goldSheen" x1="20" y1="20" x2="180" y2="180" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#FFFBEB" />
+                <stop offset="25%" stop-color="#FCD34D" />
+                <stop offset="55%" stop-color="#F59E0B" />
+                <stop offset="85%" stop-color="#D97706" />
+                <stop offset="100%" stop-color="#92400E" />
+              </linearGradient>
+
+              <!-- Inner Bevel Shadow Gradient -->
+              <linearGradient id="bevelGrad" x1="100" y1="20" x2="100" y2="180" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#FEF08A" stop-opacity="0.8"/>
+                <stop offset="100%" stop-color="#78350F" stop-opacity="0.9"/>
+              </linearGradient>
+
+              <!-- Glow Filter -->
+              <filter id="goldGlowFilter" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="6" result="blur"/>
+                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+              </filter>
+            </defs>
+
+            <!-- Outer Aura Ring -->
+            <circle cx="100" cy="100" r="88" stroke="url(#goldSheen)" stroke-opacity="0.15" stroke-width="1.5" stroke-dasharray="4 4" class="orbit-ring" />
+
+            <!-- Shadow layer -->
+            <path d="M50 48 V105 C50 132.6 72.4 155 100 155 C127.6 155 150 132.6 150 105 V48 C150 43.6 146.4 40 142 40 C137.6 40 134 43.6 134 48 V105 C134 123.8 118.8 139 100 139 C81.2 139 66 123.8 66 105 V48 C66 43.6 62.4 40 58 40 C53.6 40 50 43.6 50 48 Z"
+                  fill="#000000" fill-opacity="0.4" transform="translate(0, 5)" />
+
+            <!-- Horseshoe Main Body (U-shape facing up) -->
+            <path class="horseshoe-body"
+                  d="M50 46 V104 C50 131.6 72.4 154 100 154 C127.6 154 150 131.6 150 104 V46 C150 41.6 146.4 38 142 38 C137.6 38 134 41.6 134 46 V104 C134 122.8 118.8 138 100 138 C81.2 138 66 122.8 66 104 V46 C66 41.6 62.4 38 58 38 C53.6 38 50 41.6 50 46 Z"
+                  fill="url(#goldSheen)" filter="url(#goldGlowFilter)" stroke="url(#bevelGrad)" stroke-width="2"/>
+
+            <!-- Raised Ridge Bevel -->
+            <path d="M58 48 V104 C58 127.2 76.8 146 100 146 C123.2 146 142 127.2 142 104 V48"
+                  stroke="#FEF9C3" stroke-opacity="0.5" stroke-width="1.5" stroke-linecap="round"/>
+
+            <!-- 7 Lucky Nail Holes -->
+            <g class="nail-holes">
+              <!-- Left arm -->
+              <circle cx="58" cy="62" r="3.5" class="nail-hole" />
+              <circle cx="58" cy="86" r="3.5" class="nail-hole" />
+              <circle cx="68" cy="116" r="3.5" class="nail-hole" />
+              <!-- Bottom center -->
+              <circle cx="100" cy="146" r="3.8" class="nail-hole" />
+              <!-- Right arm -->
+              <circle cx="132" cy="116" r="3.5" class="nail-hole" />
+              <circle cx="142" cy="86" r="3.5" class="nail-hole" />
+              <circle cx="142" cy="62" r="3.5" class="nail-hole" />
+            </g>
+
+            <!-- Center Sparkle Star -->
+            <g class="center-star" id="centerStar">
+              <path d="M100 70 Q100 90 80 90 Q100 90 100 110 Q100 90 120 90 Q100 90 100 70 Z"
+                    fill="#FFFFFF" />
+              <circle cx="100" cy="90" r="2.5" fill="#FEF08A" />
+            </g>
+          </svg>
+        </div>
+
+        <div class="activation-state-text" id="statusHeading">TAP TO RECEIVE LUCK</div>
+        <div class="activation-subtext" id="statusSubtext">Ancient talisman waiting to bless your day</div>
+      </div>
+
+      <!-- Aura Meter -->
+      <div class="aura-container">
+        <div class="aura-header">
+          <span class="aura-label">LUCKY AURA LEVEL</span>
+          <span class="aura-percentage" id="auraPercent">0%</span>
+        </div>
+        <div class="aura-track">
+          <div class="aura-fill" id="auraFill"></div>
+        </div>
+      </div>
+
+      <!-- Daily Fortune Card -->
+      <div class="fortune-card" id="fortuneCard">
+        <div class="fortune-header">
+          <span class="fortune-badge" id="fortuneBadge">DAILY BLESSING</span>
+          <span class="fortune-date" id="fortuneDate">Today</span>
+        </div>
+
+        <div class="fortune-quote-wrap">
+          <svg class="quote-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+          </svg>
+          <p class="fortune-text" id="fortuneText">Tap the golden horseshoe above to unlock your daily oracle and lucky tokens.</p>
+        </div>
+
+        <!-- Lucky Tokens Grid (Standard Row) -->
+        <div class="tokens-grid">
+          <div class="token-box">
+            <div class="token-title">LUCKY NUMBER</div>
+            <div class="token-value" id="tokenNumber">--</div>
+          </div>
+          <div class="token-box">
+            <div class="token-title">GOLDEN HOUR</div>
+            <div class="token-value" id="tokenHour">--:--</div>
+          </div>
+          <div class="token-box">
+            <div class="token-title">LUCKY COLOR</div>
+            <div class="token-value" id="tokenColor">--</div>
+          </div>
+        </div>
+
+        <!-- Pro VIP Tokens Grid -->
+        <div class="pro-tokens-wrap" id="proTokensWrap">
+          <div class="tokens-grid pro-grid" id="proGrid">
+            <div class="token-box pro-token">
+              <div class="token-title">LUCKY DIRECTION</div>
+              <div class="token-value" id="tokenDirection">--</div>
+            </div>
+            <div class="token-box pro-token">
+              <div class="token-title">LUCKY ELEMENT</div>
+              <div class="token-value" id="tokenElement">--</div>
+            </div>
+            <div class="token-box pro-token">
+              <div class="token-title">WEALTH CRYSTAL</div>
+              <div class="token-value" id="tokenCrystal">--</div>
+            </div>
+          </div>
+
+          <!-- Frosted Lock Overlay for Free users -->
+          <div class="pro-lock-overlay" id="proLockOverlay">
+            <span class="lock-icon">🔒</span>
+            <span class="lock-text">VIP Wealth & Energy Matrix</span>
+            <button class="pro-unlock-tag" id="proUnlockTag">Unlock PRO 👑</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer Actions -->
+    <footer class="footer">
+      <button class="action-btn" id="activateBtn">
+        <span class="btn-sparkle">✨</span>
+        <span id="btnLabel">ACTIVATE TODAY'S LUCK</span>
+      </button>
+
+      <button class="secondary-btn hidden" id="shareBtn" title="Copy your fortune & blessing">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V6.036C4 4.912 4.895 4 6 4h8c1.105 0 2 .912 2 2.036v1.893m-6 4.142h8c1.105 0 2 .913 2 2.036v7.857c0 1.124-.895 2.036-2 2.036h-8c-1.105 0-2-.912-2-2.036v-7.857c0-1.123.895-2.036 2-2.036z" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Share</span>
+      </button>
+    </footer>
+
+    <!-- Paywall Modal (Displayed when 7-day trial ends for free users) -->
+    <div class="paywall-modal hidden" id="paywallModal">
+      <div class="paywall-card">
+        <div class="paywall-crown-glow">👑</div>
+        <h2 class="paywall-title">7-DAY FREE TRIAL ENDED</h2>
+        <p class="paywall-desc">Your 7 days of daily blessings have finished. Keep your positive momentum and good fortune alive with Lifetime Pro.</p>
+        
+        <div class="paywall-perks">
+          <div class="perk-row"><span>✨</span><b>Unlimited Daily Aura Recharges</b></div>
+          <div class="perk-row"><span>🔮</span><b>Deep Wealth & Manifestation Prophecies</b></div>
+          <div class="perk-row"><span>🧭</span><b>Full Energy Matrix (Direction, Crystal, Element)</b></div>
+          <div class="perk-row"><span>👑</span><b>Permanent Lucky Talisman Protection</b></div>
+        </div>
+
+        <button class="paywall-action-btn" id="paywallUpgradeBtn">
+          <span>👑 UPGRADE TO LIFETIME PRO</span>
+        </button>
+
+        <button class="paywall-login-link" id="paywallLoginBtn">
+          Already purchased? Restore / Log In
+        </button>
+      </div>
+    </div>
+
+    <!-- Toast message -->
+    <div class="toast" id="toast">Luck & Fortune copied! 🍀</div>
+  </div>
+
+  <script src="ExtPay.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
