@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Lucky Horseshoe - Daily Fortune & Good Luck Charm",
   "short_name": "Horseshoe",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Your digital lucky talisman. Tap the golden horseshoe to activate your daily lucky aura, fortunes, and positive serendipity.",
   "icons": {
     "16": "icons/icon16.png",
@@ -21,7 +21,9 @@
     "default_title": "Lucky Horseshoe"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "alarms",
+    "notifications"
   ],
   "background": {
     "service_worker": "background.js"

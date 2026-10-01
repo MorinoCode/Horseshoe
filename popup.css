@@ -45,6 +45,38 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* RTL Support for Persian */
+body.rtl {
+  direction: rtl;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
+}
+body.rtl .header,
+body.rtl .fortune-quote-wrap,
+body.rtl .aura-header,
+body.rtl .paywall-perks,
+body.rtl .intention-row {
+  direction: rtl;
+}
+body.rtl .brand-title {
+  font-size: 9.5px;
+  letter-spacing: 0;
+}
+body.rtl .brand {
+  gap: 4px;
+}
+body.rtl .header-actions {
+  gap: 3.5px;
+}
+body.rtl .trial-pill,
+body.rtl .pro-badge,
+body.rtl .streak-badge {
+  padding: 2px 4px;
+  font-size: 8.5px;
+}
+body.rtl .paywall-perks {
+  text-align: right;
+}
+
 /* Ambient dynamic background glow */
 .ambient-glow {
   position: absolute;
@@ -90,7 +122,7 @@ html, body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 12px 14px 14px;
+  padding: 10px 14px 12px;
   justify-content: space-between;
 }
 
@@ -99,19 +131,19 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 8px;
+  padding-bottom: 7px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
 }
 
 .mini-icon {
-  width: 20px;
-  height: 20px;
+  width: 19px;
+  height: 19px;
   border-radius: 5px;
   background: linear-gradient(135deg, var(--gold-400), var(--gold-600));
   display: flex;
@@ -122,22 +154,32 @@ html, body {
 }
 
 .mini-icon svg {
-  width: 12px;
-  height: 12px;
+  width: 11px;
+  height: 11px;
 }
 
 .brand-title {
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 800;
-  letter-spacing: 1.8px;
+  letter-spacing: 1.2px;
   color: var(--gold-200);
   text-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+  white-space: nowrap;
 }
 
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
+}
+
+/* Language Button */
+.lang-btn {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: var(--gold-300);
+  width: 24px;
+  height: 24px;
 }
 
 /* 7-Day Trial Pill */
@@ -149,9 +191,9 @@ html, body {
   flex-shrink: 0;
   background: rgba(245, 158, 11, 0.12);
   border: 1px solid rgba(245, 158, 11, 0.35);
-  padding: 2px 7px;
+  padding: 2px 6px;
   border-radius: 20px;
-  font-size: 9.5px;
+  font-size: 9px;
   font-weight: 700;
   color: var(--gold-300);
   transition: all 0.25s ease;
@@ -164,7 +206,7 @@ html, body {
 }
 
 .trial-icon {
-  font-size: 9.5px;
+  font-size: 9px;
   line-height: 1;
 }
 
@@ -177,9 +219,9 @@ html, body {
   flex-shrink: 0;
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.3));
   border: 1px solid rgba(245, 158, 11, 0.5);
-  padding: 2px 7px;
+  padding: 2px 6px;
   border-radius: 20px;
-  font-size: 9.5px;
+  font-size: 9px;
   font-weight: 800;
   color: var(--gold-300);
   cursor: pointer;
@@ -194,7 +236,7 @@ html, body {
 }
 
 .pro-crown {
-  font-size: 10px;
+  font-size: 9.5px;
 }
 
 .pro-badge.is-pro {
@@ -211,9 +253,9 @@ html, body {
   flex-shrink: 0;
   background: rgba(16, 185, 129, 0.12);
   border: 1px solid rgba(16, 185, 129, 0.3);
-  padding: 2px 7px;
+  padding: 2px 6px;
   border-radius: 20px;
-  font-size: 10.5px;
+  font-size: 9.5px;
   font-weight: 700;
   color: var(--emerald-400);
   transition: all 0.25s ease;
@@ -235,6 +277,7 @@ html, body {
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
 .icon-btn:hover {
@@ -258,6 +301,42 @@ html, body {
   padding: 2px 0;
 }
 
+/* Skins Selector Bar */
+.skins-bar {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 2px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: 20px;
+}
+
+.skin-btn {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  width: 21px;
+  height: 21px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.skin-btn:hover {
+  transform: scale(1.15);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.skin-btn.active {
+  border-color: var(--gold-400);
+  background: rgba(245, 158, 11, 0.25);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+}
+
 .horseshoe-pedestal {
   position: relative;
   display: flex;
@@ -269,8 +348,8 @@ html, body {
 .pedestal-glow {
   position: absolute;
   top: 5px;
-  width: 120px;
-  height: 120px;
+  width: 115px;
+  height: 115px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(245, 158, 11, 0.28) 0%, rgba(245, 158, 11, 0) 70%);
   filter: blur(20px);
@@ -280,8 +359,8 @@ html, body {
 
 .horseshoe-wrapper {
   position: relative;
-  width: 124px;
-  height: 124px;
+  width: 116px;
+  height: 116px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -350,29 +429,29 @@ html, body {
 }
 
 .activation-state-text {
-  margin-top: 3px;
-  font-size: 11.5px;
+  margin-top: 2px;
+  font-size: 11px;
   font-weight: 800;
-  letter-spacing: 1.5px;
+  letter-spacing: 1.2px;
   color: var(--gold-300);
   text-align: center;
   transition: all 0.4s ease;
 }
 
 .activation-subtext {
-  font-size: 10px;
+  font-size: 9.5px;
   color: var(--text-secondary);
   text-align: center;
-  margin-top: 2px;
-  max-width: 260px;
-  line-height: 1.35;
+  margin-top: 1px;
+  max-width: 270px;
+  line-height: 1.3;
   transition: all 0.4s ease;
 }
 
-/* Aura Level Meter */
+/* Aura Level Meter & Streak Dots */
 .aura-container {
   width: 100%;
-  margin-top: 8px;
+  margin-top: 6px;
   padding: 6px 10px;
   background: var(--bg-card);
   border: 1px solid var(--card-border);
@@ -384,23 +463,23 @@ html, body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 8.5px;
+  font-size: 8px;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
   color: var(--text-muted);
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
 .aura-percentage {
   color: var(--gold-400);
   font-weight: 800;
   font-variant-numeric: tabular-nums;
-  font-size: 10px;
+  font-size: 9.5px;
 }
 
 .aura-track {
   width: 100%;
-  height: 5px;
+  height: 4px;
   background: rgba(15, 23, 42, 0.85);
   border-radius: 10px;
   overflow: hidden;
@@ -416,16 +495,39 @@ html, body {
   box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
 }
 
+/* 7-Day Streak Progress Dots */
+.streak-dots-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 5px;
+}
+
+.s-dot {
+  width: 5.5px;
+  height: 5.5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  transition: all 0.3s ease;
+}
+
+.s-dot.active {
+  background: var(--gold-400);
+  box-shadow: 0 0 6px var(--gold-500);
+  transform: scale(1.15);
+}
+
 /* Fortune Blessing Card */
 .fortune-card {
   width: 100%;
-  margin-top: 8px;
-  padding: 10px 12px;
+  margin-top: 6px;
+  padding: 8px 10px;
   background: var(--bg-card);
   border: 1px solid var(--card-border);
   backdrop-filter: blur(14px);
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
   transition: all 0.4s ease;
 }
 
@@ -433,18 +535,18 @@ html, body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
 .fortune-badge {
-  font-size: 8px;
+  font-size: 7.5px;
   font-weight: 800;
-  letter-spacing: 1.2px;
+  letter-spacing: 1px;
   color: var(--gold-400);
   background: rgba(245, 158, 11, 0.1);
   border: 1px solid rgba(245, 158, 11, 0.25);
   padding: 2px 5px;
-  border-radius: 5px;
+  border-radius: 4px;
 }
 
 .fortune-badge.pro-mode {
@@ -454,20 +556,20 @@ html, body {
 }
 
 .fortune-date {
-  font-size: 9px;
+  font-size: 8.5px;
   color: var(--text-muted);
 }
 
 .fortune-quote-wrap {
   display: flex;
-  gap: 6px;
+  gap: 5px;
   align-items: flex-start;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .quote-icon {
-  width: 11px;
-  height: 11px;
+  width: 10px;
+  height: 10px;
   color: var(--gold-500);
   opacity: 0.75;
   flex-shrink: 0;
@@ -475,44 +577,67 @@ html, body {
 }
 
 .fortune-text {
-  font-size: 10.5px;
-  line-height: 1.4;
+  font-size: 10px;
+  line-height: 1.35;
   color: #E2E8F0;
   font-style: italic;
-  min-height: 28px;
+  min-height: 24px;
 }
 
 /* Lucky Tokens Grid */
 .tokens-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 5px;
+  gap: 4px;
 }
 
 .token-box {
   background: rgba(10, 15, 28, 0.75);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 7px;
-  padding: 5px 2px;
+  border-radius: 6px;
+  padding: 4px 2px;
   text-align: center;
   transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .token-box:hover {
   border-color: rgba(245, 158, 11, 0.35);
-  transform: translateY(-1px);
 }
 
 .token-title {
-  font-size: 7px;
+  font-size: 6.8px;
   font-weight: 700;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.4px;
   color: var(--text-muted);
-  margin-bottom: 2px;
+  margin-bottom: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.hour-bell-btn {
+  background: none;
+  border: none;
+  font-size: 8px;
+  cursor: pointer;
+  opacity: 0.6;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.hour-bell-btn:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.hour-bell-btn.active {
+  opacity: 1;
+  filter: drop-shadow(0 0 4px var(--gold-400));
 }
 
 .token-value {
-  font-size: 10.5px;
+  font-size: 10px;
   font-weight: 800;
   color: var(--gold-300);
   white-space: nowrap;
@@ -523,8 +648,8 @@ html, body {
 /* Pro VIP Tokens Container & Frosted Lock Overlay */
 .pro-tokens-wrap {
   position: relative;
-  margin-top: 5px;
-  border-radius: 7px;
+  margin-top: 4px;
+  border-radius: 6px;
 }
 
 .pro-tokens-wrap.is-locked .pro-grid {
@@ -548,13 +673,13 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
   background: rgba(9, 13, 24, 0.82);
   backdrop-filter: blur(2px);
   border: 1px dashed rgba(245, 158, 11, 0.35);
-  border-radius: 7px;
+  border-radius: 6px;
   z-index: 2;
-  padding: 3px 6px;
+  padding: 2px 5px;
 }
 
 .pro-lock-overlay.hidden {
@@ -562,24 +687,24 @@ html, body {
 }
 
 .lock-icon {
-  font-size: 10px;
+  font-size: 9px;
 }
 
 .lock-text {
-  font-size: 8.5px;
+  font-size: 8px;
   font-weight: 700;
   color: var(--gold-200);
-  letter-spacing: 0.4px;
+  letter-spacing: 0.3px;
 }
 
 .pro-unlock-tag {
   background: linear-gradient(135deg, #F59E0B, #D97706);
   color: #0B0E14;
-  font-size: 8.5px;
+  font-size: 8px;
   font-weight: 900;
   border: none;
-  padding: 2px 7px;
-  border-radius: 12px;
+  padding: 2px 6px;
+  border-radius: 10px;
   cursor: pointer;
   transition: transform 0.2s ease, filter 0.2s ease;
   box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
@@ -590,11 +715,83 @@ html, body {
   filter: brightness(1.1);
 }
 
+/* Daily Intention Anchor */
+.intention-wrap {
+  width: 100%;
+  margin-top: 5px;
+}
+
+.intention-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 7px;
+  padding: 3px 7px;
+  transition: border-color 0.2s ease;
+}
+
+.intention-row:focus-within {
+  border-color: rgba(245, 158, 11, 0.45);
+}
+
+.intention-icon {
+  font-size: 10px;
+}
+
+.intention-input {
+  background: none;
+  border: none;
+  color: #F8FAFC;
+  font-size: 9.5px;
+  width: 100%;
+  outline: none;
+  font-family: inherit;
+}
+
+.intention-input::placeholder {
+  color: #64748B;
+  font-size: 9px;
+}
+
+.intention-blessed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 7px;
+  padding: 3px 6px;
+  font-size: 9.5px;
+  color: #6EE7B7;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.intention-blessed:hover {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: rgba(52, 211, 153, 0.6);
+}
+
+.ib-icon {
+  font-size: 9.5px;
+}
+
+.ib-text {
+  color: #FFFFFF;
+  max-width: 170px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* Footer & Buttons */
 .footer {
   display: flex;
   gap: 8px;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 .action-btn {
@@ -603,11 +800,11 @@ html, body {
   background: linear-gradient(135deg, #F59E0B 0%, #D97706 50%, #B45309 100%);
   color: #0B0E14;
   border: 1px solid rgba(254, 240, 138, 0.3);
-  padding: 9px 12px;
-  border-radius: 10px;
+  padding: 8px 12px;
+  border-radius: 9px;
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.6px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -650,8 +847,8 @@ html, body {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(245, 158, 11, 0.25);
   color: var(--gold-200);
-  padding: 9px 12px;
-  border-radius: 10px;
+  padding: 8px 12px;
+  border-radius: 9px;
   font-size: 11px;
   font-weight: 700;
   cursor: pointer;
@@ -668,11 +865,11 @@ html, body {
 }
 
 .secondary-btn svg {
-  width: 13px;
-  height: 13px;
+  width: 12px;
+  height: 12px;
 }
 
-/* Paywall Modal (Displayed when 7-day trial ends for free users) */
+/* Paywall Modal */
 .paywall-modal {
   position: absolute;
   inset: 0;
@@ -778,19 +975,19 @@ html, body {
   color: var(--gold-300);
 }
 
-/* Toast Notification - Floating above buttons on a single line */
+/* Toast Notification */
 .toast {
   position: absolute;
-  bottom: 60px;
+  bottom: 54px;
   left: 50%;
   transform: translateX(-50%) translateY(15px);
   background: rgba(11, 16, 28, 0.96);
   border: 1px solid rgba(245, 158, 11, 0.5);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 16px rgba(245, 158, 11, 0.25);
   color: var(--gold-100);
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 700;
-  padding: 7px 16px;
+  padding: 6px 14px;
   border-radius: 20px;
   opacity: 0;
   pointer-events: none;

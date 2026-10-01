@@ -1,6 +1,7 @@
 /**
  * Lucky Horseshoe - Background Service Worker (Manifest V3)
- * Manages extension lifecycle, badge indicators, ExtensionPay, and daily status sync.
+ * Manages extension lifecycle, badge indicators, ExtensionPay, daily status sync,
+ * and Golden Hour reminders.
  */
 
 importScripts('ExtPay.js');
@@ -43,10 +44,52 @@ async function updateBadge(isActivatedToday) {
 
 // Check current state from storage and refresh badge
 function refreshDailyState() {
-  chrome.storage.local.get(['lastActivatedDate'], (result) => {
+  chrome.storage.local.get(['lastActivatedDate', 'goldenHourAlarmEnabled', 'goldenHourTime'], (result) => {
     const today = getTodayDateString();
     const isActivated = result.lastActivatedDate === today;
     updateBadge(isActivated);
+
+    if (result.goldenHourAlarmEnabled && result.goldenHourTime) {
+      scheduleGoldenHourAlarm(result.goldenHourTime);
+    }
+  });
+}
+
+// Schedule Golden Hour reminder alarm
+function scheduleGoldenHourAlarm(hourStr) {
+  if (!hourStr || typeof chrome.alarms === 'undefined') return;
+  const match = hourStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+  if (!match) return;
+  let [_, h, m, period] = match;
+  h = parseInt(h, 10);
+  m = parseInt(m, 10);
+  if (period.toUpperCase() === 'PM' && h < 12) h += 12;
+  if (period.toUpperCase() === 'AM' && h === 12) h = 0;
+
+  const target = new Date();
+  target.setHours(h, m, 0, 0);
+
+  if (target.getTime() <= Date.now()) {
+    target.setDate(target.getDate() + 1);
+  }
+
+  chrome.alarms.create('golden_hour_alarm', { when: target.getTime() });
+}
+
+// Trigger desktop notification when Golden Hour arrives
+if (typeof chrome.alarms !== 'undefined') {
+  chrome.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name === 'golden_hour_alarm') {
+      if (typeof chrome.notifications !== 'undefined') {
+        chrome.notifications.create({
+          type: 'basic',
+          iconUrl: 'icons/icon128.png',
+          title: '🍀 Your Golden Hour Has Arrived!',
+          message: 'Your cosmic lucky hour is active now. Take a deep breath, focus your intention, and let serendipity work for you! ✨',
+          priority: 2
+        });
+      }
+    }
   });
 }
 
@@ -62,9 +105,20 @@ chrome.runtime.onStartup.addListener(() => {
 
 // Listen for storage changes from popup
 chrome.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName === 'local' && changes.lastActivatedDate) {
-    const today = getTodayDateString();
-    const isActivated = changes.lastActivatedDate.newValue === today;
-    updateBadge(isActivated);
+  if (areaName === 'local') {
+    if (changes.lastActivatedDate) {
+      const today = getTodayDateString();
+      const isActivated = changes.lastActivatedDate.newValue === today;
+      updateBadge(isActivated);
+    }
+    if (changes.goldenHourAlarmEnabled || changes.goldenHourTime) {
+      chrome.storage.local.get(['goldenHourAlarmEnabled', 'goldenHourTime'], (res) => {
+        if (res.goldenHourAlarmEnabled && res.goldenHourTime) {
+          scheduleGoldenHourAlarm(res.goldenHourTime);
+        } else {
+          chrome.alarms.clear('golden_hour_alarm');
+        }
+      });
+    }
   }
 });

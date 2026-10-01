@@ -14,7 +14,7 @@
   <!-- Particle Canvas for explosive golden confetti -->
   <canvas id="particleCanvas"></canvas>
 
-  <div class="container">
+  <div class="container" id="appContainer">
     <!-- Top Navigation Bar -->
     <header class="header">
       <div class="brand">
@@ -23,10 +23,13 @@
             <path d="M6 3v8a6 6 0 0 0 12 0V3" stroke-linecap="round"/>
           </svg>
         </div>
-        <span class="brand-title">LUCKY HORSESHOE</span>
+        <span class="brand-title" id="brandTitle">LUCKY HORSESHOE</span>
       </div>
 
       <div class="header-actions">
+        <!-- Language Switcher -->
+        <button class="icon-btn lang-btn" id="langToggle" title="تغییر زبان به فارسی / Switch Language">FA</button>
+
         <!-- 7-Day Trial Indicator -->
         <div class="trial-pill" id="trialPill" title="Free Trial Status">
           <span class="trial-icon">⏳</span>
@@ -63,6 +66,14 @@
 
     <!-- Hero Interactive Section -->
     <main class="main-stage">
+      <!-- Skin Selector (Pro Perks) -->
+      <div class="skins-bar" id="skinsBar">
+        <button class="skin-btn active" data-skin="gold" title="Imperial Gold (Classic)">🌟</button>
+        <button class="skin-btn" data-skin="emerald" title="Emerald Radiance (VIP)">🌿</button>
+        <button class="skin-btn" data-skin="diamond" title="Diamond Quantum (VIP)">💎</button>
+        <button class="skin-btn" data-skin="rosegold" title="Rose Gold Love (VIP)">🌸</button>
+      </div>
+
       <div class="horseshoe-pedestal" id="horseshoePedestal">
         <div class="pedestal-glow" id="pedestalGlow"></div>
         <div class="horseshoe-halo"></div>
@@ -71,13 +82,40 @@
         <div class="horseshoe-wrapper" id="horseshoeBtn" role="button" tabindex="0" aria-label="Activate Lucky Horseshoe">
           <svg class="horseshoe-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <!-- Metallic Gold Gradient -->
+              <!-- 1. Metallic Gold Gradient (Default) -->
               <linearGradient id="goldSheen" x1="20" y1="20" x2="180" y2="180" gradientUnits="userSpaceOnUse">
                 <stop offset="0%" stop-color="#FFFBEB" />
                 <stop offset="25%" stop-color="#FCD34D" />
                 <stop offset="55%" stop-color="#F59E0B" />
                 <stop offset="85%" stop-color="#D97706" />
                 <stop offset="100%" stop-color="#92400E" />
+              </linearGradient>
+
+              <!-- 2. Emerald Radiance Gradient -->
+              <linearGradient id="emeraldSheen" x1="20" y1="20" x2="180" y2="180" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#ECFDF5" />
+                <stop offset="25%" stop-color="#6EE7B7" />
+                <stop offset="55%" stop-color="#10B981" />
+                <stop offset="85%" stop-color="#047857" />
+                <stop offset="100%" stop-color="#064E3B" />
+              </linearGradient>
+
+              <!-- 3. Diamond Quantum Gradient -->
+              <linearGradient id="diamondSheen" x1="20" y1="20" x2="180" y2="180" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#F0FDF4" />
+                <stop offset="25%" stop-color="#BAE6FD" />
+                <stop offset="55%" stop-color="#38BDF8" />
+                <stop offset="85%" stop-color="#0284C7" />
+                <stop offset="100%" stop-color="#0369A1" />
+              </linearGradient>
+
+              <!-- 4. Rose Gold Love Gradient -->
+              <linearGradient id="rosegoldSheen" x1="20" y1="20" x2="180" y2="180" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#FFF1F2" />
+                <stop offset="25%" stop-color="#FECDD3" />
+                <stop offset="55%" stop-color="#FB7185" />
+                <stop offset="85%" stop-color="#E11D48" />
+                <stop offset="100%" stop-color="#9F1239" />
               </linearGradient>
 
               <!-- Inner Bevel Shadow Gradient -->
@@ -94,14 +132,14 @@
             </defs>
 
             <!-- Outer Aura Ring -->
-            <circle cx="100" cy="100" r="88" stroke="url(#goldSheen)" stroke-opacity="0.15" stroke-width="1.5" stroke-dasharray="4 4" class="orbit-ring" />
+            <circle cx="100" cy="100" r="88" stroke="url(#goldSheen)" stroke-opacity="0.15" stroke-width="1.5" stroke-dasharray="4 4" class="orbit-ring" id="orbitRingSvg" />
 
             <!-- Shadow layer -->
             <path d="M50 48 V105 C50 132.6 72.4 155 100 155 C127.6 155 150 132.6 150 105 V48 C150 43.6 146.4 40 142 40 C137.6 40 134 43.6 134 48 V105 C134 123.8 118.8 139 100 139 C81.2 139 66 123.8 66 105 V48 C66 43.6 62.4 40 58 40 C53.6 40 50 43.6 50 48 Z"
                   fill="#000000" fill-opacity="0.4" transform="translate(0, 5)" />
 
-            <!-- Horseshoe Main Body (U-shape facing up) -->
-            <path class="horseshoe-body"
+            <!-- Horseshoe Main Body -->
+            <path class="horseshoe-body" id="horseshoeBody"
                   d="M50 46 V104 C50 131.6 72.4 154 100 154 C127.6 154 150 131.6 150 104 V46 C150 41.6 146.4 38 142 38 C137.6 38 134 41.6 134 46 V104 C134 122.8 118.8 138 100 138 C81.2 138 66 122.8 66 104 V46 C66 41.6 62.4 38 58 38 C53.6 38 50 41.6 50 46 Z"
                   fill="url(#goldSheen)" filter="url(#goldGlowFilter)" stroke="url(#bevelGrad)" stroke-width="2"/>
 
@@ -136,14 +174,25 @@
         <div class="activation-subtext" id="statusSubtext">Ancient talisman waiting to bless your day</div>
       </div>
 
-      <!-- Aura Meter -->
+      <!-- Aura Meter & 7-Day Streak Dots -->
       <div class="aura-container">
         <div class="aura-header">
-          <span class="aura-label">LUCKY AURA LEVEL</span>
+          <span class="aura-label" id="auraLabel">LUCKY AURA LEVEL</span>
           <span class="aura-percentage" id="auraPercent">0%</span>
         </div>
         <div class="aura-track">
           <div class="aura-fill" id="auraFill"></div>
+        </div>
+
+        <!-- 7-Day Streak Progress Dots -->
+        <div class="streak-dots-wrap" id="streakDotsWrap" title="7-Day Luck Streak Progress">
+          <div class="s-dot" data-day="1"></div>
+          <div class="s-dot" data-day="2"></div>
+          <div class="s-dot" data-day="3"></div>
+          <div class="s-dot" data-day="4"></div>
+          <div class="s-dot" data-day="5"></div>
+          <div class="s-dot" data-day="6"></div>
+          <div class="s-dot" data-day="7"></div>
         </div>
       </div>
 
@@ -164,15 +213,18 @@
         <!-- Lucky Tokens Grid (Standard Row) -->
         <div class="tokens-grid">
           <div class="token-box">
-            <div class="token-title">LUCKY NUMBER</div>
+            <div class="token-title" id="titleNumber">LUCKY NUMBER</div>
             <div class="token-value" id="tokenNumber">--</div>
           </div>
           <div class="token-box">
-            <div class="token-title">GOLDEN HOUR</div>
+            <div class="token-title" id="titleHour">
+              GOLDEN HOUR
+              <button class="hour-bell-btn" id="goldenHourBell" title="Set Golden Hour Reminder Notification">🔔</button>
+            </div>
             <div class="token-value" id="tokenHour">--:--</div>
           </div>
           <div class="token-box">
-            <div class="token-title">LUCKY COLOR</div>
+            <div class="token-title" id="titleColor">LUCKY COLOR</div>
             <div class="token-value" id="tokenColor">--</div>
           </div>
         </div>
@@ -181,15 +233,15 @@
         <div class="pro-tokens-wrap" id="proTokensWrap">
           <div class="tokens-grid pro-grid" id="proGrid">
             <div class="token-box pro-token">
-              <div class="token-title">LUCKY DIRECTION</div>
+              <div class="token-title" id="titleDirection">LUCKY DIRECTION</div>
               <div class="token-value" id="tokenDirection">--</div>
             </div>
             <div class="token-box pro-token">
-              <div class="token-title">LUCKY ELEMENT</div>
+              <div class="token-title" id="titleElement">LUCKY ELEMENT</div>
               <div class="token-value" id="tokenElement">--</div>
             </div>
             <div class="token-box pro-token">
-              <div class="token-title">WEALTH CRYSTAL</div>
+              <div class="token-title" id="titleCrystal">WEALTH CRYSTAL</div>
               <div class="token-value" id="tokenCrystal">--</div>
             </div>
           </div>
@@ -197,9 +249,22 @@
           <!-- Frosted Lock Overlay for Free users -->
           <div class="pro-lock-overlay" id="proLockOverlay">
             <span class="lock-icon">🔒</span>
-            <span class="lock-text">VIP Wealth & Energy Matrix</span>
+            <span class="lock-text" id="lockText">VIP Wealth & Energy Matrix</span>
             <button class="pro-unlock-tag" id="proUnlockTag">Unlock PRO 👑</button>
           </div>
+        </div>
+      </div>
+
+      <!-- Daily Intention Anchor Box -->
+      <div class="intention-wrap" id="intentionWrap">
+        <div class="intention-row" id="intentionInputRow">
+          <span class="intention-icon">🎯</span>
+          <input type="text" id="intentionInput" class="intention-input" placeholder="Anchor today's goal (e.g. Big meeting, Exam, Deal)..." maxlength="45" />
+        </div>
+        <div class="intention-blessed hidden" id="intentionBlessed">
+          <span class="ib-icon">✨</span>
+          <span class="ib-label" id="ibLabel">Blessed for:</span>
+          <b class="ib-text" id="ibText"></b>
         </div>
       </div>
     </main>
@@ -215,7 +280,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M8 17.929H6c-1.105 0-2-.912-2-2.036V6.036C4 4.912 4.895 4 6 4h8c1.105 0 2 .912 2 2.036v1.893m-6 4.142h8c1.105 0 2 .913 2 2.036v7.857c0 1.124-.895 2.036-2 2.036h-8c-1.105 0-2-.912-2-2.036v-7.857c0-1.123.895-2.036 2-2.036z" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <span>Share</span>
+        <span id="shareBtnLabel">Share</span>
       </button>
     </footer>
 
@@ -223,18 +288,18 @@
     <div class="paywall-modal hidden" id="paywallModal">
       <div class="paywall-card">
         <div class="paywall-crown-glow">👑</div>
-        <h2 class="paywall-title">7-DAY FREE TRIAL ENDED</h2>
-        <p class="paywall-desc">Your 7 days of daily blessings have finished. Keep your positive momentum and good fortune alive with Lifetime Pro.</p>
+        <h2 class="paywall-title" id="paywallTitle">7-DAY FREE TRIAL ENDED</h2>
+        <p class="paywall-desc" id="paywallDesc">Your 7 days of daily blessings have finished. Keep your positive momentum and good fortune alive with Lifetime Pro.</p>
         
         <div class="paywall-perks">
-          <div class="perk-row"><span>✨</span><b>Unlimited Daily Aura Recharges</b></div>
-          <div class="perk-row"><span>🔮</span><b>Deep Wealth & Manifestation Prophecies</b></div>
-          <div class="perk-row"><span>🧭</span><b>Full Energy Matrix (Direction, Crystal, Element)</b></div>
-          <div class="perk-row"><span>👑</span><b>Permanent Lucky Talisman Protection</b></div>
+          <div class="perk-row"><span>✨</span><b id="perk1">Unlimited Daily Aura Recharges</b></div>
+          <div class="perk-row"><span>🔮</span><b id="perk2">Deep Wealth & Manifestation Prophecies</b></div>
+          <div class="perk-row"><span>🧭</span><b id="perk3">Full Energy Matrix (Direction, Crystal, Element)</b></div>
+          <div class="perk-row"><span>👑</span><b id="perk4">Permanent Lucky Talisman Protection</b></div>
         </div>
 
         <button class="paywall-action-btn" id="paywallUpgradeBtn">
-          <span>👑 UPGRADE TO LIFETIME PRO</span>
+          <span id="paywallBtnText">👑 UPGRADE TO LIFETIME PRO</span>
         </button>
 
         <button class="paywall-login-link" id="paywallLoginBtn">
