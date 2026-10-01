@@ -6,6 +6,9 @@
 
 importScripts('ExtPay.js');
 
+// SECURITY CONFIGURATION: In production, IS_DEV_MODE MUST be false.
+const IS_DEV_MODE = false;
+
 // Initialize ExtensionPay for monetization
 const extpay = ExtPay('lucky-horseshoe');
 extpay.startBackground();
@@ -23,12 +26,14 @@ function getTodayDateString() {
 async function updateBadge(isActivatedToday) {
   if (isActivatedToday) {
     try {
-      const testData = await new Promise((r) => chrome.storage.local.get(['proTestOverride'], r));
-      if (testData && testData.proTestOverride) {
-        chrome.action.setBadgeText({ text: '👑' });
-        chrome.action.setBadgeBackgroundColor({ color: '#D97706' }); // Royal Gold
-        chrome.action.setTitle({ title: 'Lucky Horseshoe (VIP Pro Active 👑)' });
-        return;
+      if (IS_DEV_MODE) {
+        const testData = await new Promise((r) => chrome.storage.local.get(['proTestOverride'], r));
+        if (testData && testData.proTestOverride) {
+          chrome.action.setBadgeText({ text: '👑' });
+          chrome.action.setBadgeBackgroundColor({ color: '#D97706' }); // Royal Gold
+          chrome.action.setTitle({ title: 'Lucky Horseshoe (VIP Pro Active 👑)' });
+          return;
+        }
       }
       const user = await extpay.getUser();
       if (user && user.paid) {
@@ -113,7 +118,7 @@ chrome.runtime.onStartup.addListener(() => {
 // Listen for storage changes from popup
 chrome.storage.onChanged.addListener((changes, areaName) => {
   if (areaName === 'local') {
-    if (changes.lastActivatedDate || changes.proTestOverride) {
+    if (changes.lastActivatedDate || (IS_DEV_MODE && changes.proTestOverride)) {
       const today = getTodayDateString();
       chrome.storage.local.get(['lastActivatedDate'], (res) => {
         updateBadge(res.lastActivatedDate === today);

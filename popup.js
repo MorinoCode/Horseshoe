@@ -12,6 +12,16 @@
  * - Synthesized Web Audio API celestial chimes & Canvas particle physics.
  */
 
+// =========================================================================
+// SECURITY CONFIGURATION
+// In production, IS_DEV_MODE MUST be false.
+// When false:
+// 1. All dev shortcuts (Alt/Ctrl click, triple click) are completely disabled.
+// 2. Storage proTestOverride is completely ignored.
+// 3. User plan is strictly verified via official ExtensionPay API.
+// =========================================================================
+const IS_DEV_MODE = false;
+
 // --- 1. Storage Wrapper (chrome.storage.local with localStorage fallback) ---
 const Storage = {
   get: (keys) => {
@@ -182,8 +192,8 @@ const PRO_CRYSTALS = {
   en: ["Citrine (Wealth)", "Pyrite (Gold)", "Emerald (Luck)", "Amethyst (Peace)", "Clear Quartz (Power)"],
   fa: ["سیترین (ثروت و پول)", "پیریت (طلای مغناطیسی)", "زمرد (برکت و شانس)", "آمتیست (آرامش ذهن)", "کوارتز شفاف (قدرت و پاکی)"],
   ar: ["السترين (الثروة والمال)", "البيريت (مغناطيس الذهب)", "الزمرد (البركة والحظ)", "الجمشت (سلام النفس)", "الكوارتز الشفاف (القوة والنقاء)"],
-  ru: ["Цитрин (Богатство)", "Пирит (Золото)", "Изумруд (Удача)", "Аметист (Покой)", "Кварц (Сила)"],
-  es: ["Citrino (Riqueza)", "Pirita (Oro)", "Esmeralda (Suerte)", "Amatista (Paz)", "Cuarzo Transparente (Poder)"]
+  ru: ["Цитрин (Успех)", "Пирит (Золото)", "Изумруд (Удача)", "Аметист (Покой)", "Кварц (Сила)"],
+  es: ["Citrino (Riqueza)", "Pirita (Oro)", "Esmeralda (Suerte)", "Amatista (Paz)", "Cuarzo (Poder)"]
 };
 
 // --- 3. Internationalization (i18n) Dictionary in 5 Languages ---
@@ -884,18 +894,20 @@ class LuckyHorseshoeApp {
     let proClickTimer = null;
     if (this.proBtn) {
       this.proBtn.addEventListener('click', (e) => {
-        if (e.altKey || e.ctrlKey || e.shiftKey) {
-          e.preventDefault();
-          this.toggleProTest();
-          return;
-        }
-        proClickCount++;
-        clearTimeout(proClickTimer);
-        proClickTimer = setTimeout(() => { proClickCount = 0; }, 500);
-        if (proClickCount >= 3) {
-          proClickCount = 0;
-          this.toggleProTest();
-          return;
+        if (IS_DEV_MODE) {
+          if (e.altKey || e.ctrlKey || e.shiftKey) {
+            e.preventDefault();
+            this.toggleProTest();
+            return;
+          }
+          proClickCount++;
+          clearTimeout(proClickTimer);
+          proClickTimer = setTimeout(() => { proClickCount = 0; }, 500);
+          if (proClickCount >= 3) {
+            proClickCount = 0;
+            this.toggleProTest();
+            return;
+          }
         }
         this.handleProClick();
       });
@@ -1089,12 +1101,14 @@ class LuckyHorseshoeApp {
   }
 
   async checkProStatus() {
-    // Check developer test override
-    const data = await Storage.get(['proTestOverride']);
-    if (data.proTestOverride) {
-      this.isProUser = true;
-      this.isTrialExpired = false;
-      return;
+    // Check developer test override ONLY if in dev mode
+    if (IS_DEV_MODE) {
+      const data = await Storage.get(['proTestOverride']);
+      if (data.proTestOverride) {
+        this.isProUser = true;
+        this.isTrialExpired = false;
+        return;
+      }
     }
 
     if (!this.extpay) return;
@@ -1110,6 +1124,10 @@ class LuckyHorseshoeApp {
   }
 
   async toggleProTest() {
+    if (!IS_DEV_MODE) {
+      console.warn('Developer test shortcuts are disabled in production.');
+      return 'Developer test shortcuts are disabled in production.';
+    }
     this.isProUser = !this.isProUser;
     await Storage.set({ proTestOverride: this.isProUser });
     this.sound.playCelestialChime(this.isProUser);
